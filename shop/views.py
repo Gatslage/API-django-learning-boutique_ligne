@@ -1,7 +1,8 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from unicodedata import category
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ReadOnlyModelViewSet,ModelViewSet
+from shop.permissions import IsAdminAuthenticated, IsStaffAuthenticated
 
 from shop.serializers import categoryDetailSeria, categorySeria, productDetailSeria,productSeria,articleSeria
 from shop.models import Category,Product,Article
@@ -18,8 +19,12 @@ class MultipleSerializerMixin():
     
 
 class AdminCategoryMViewSet(MultipleSerializerMixin,ModelViewSet):
+    #les serializer_class pour si c'est  une action de type liste ou detail
     serializer_class=categorySeria
     detail_serializer_class=categoryDetailSeria
+    #etablissons les permissions
+    permission_classes=[IsAdminAuthenticated,IsStaffAuthenticated]
+
 
     def get_queryset(self):
 
